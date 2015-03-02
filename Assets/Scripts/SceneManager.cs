@@ -7,6 +7,7 @@ using UnityEditor;
 public class SceneManager : MonoBehaviour
 {
     public GameObject[] m_scenes;
+    public float[] m_timeoffsets;
     public float m_current;
     public float m_time;
     float m_current_prev = -1;
@@ -39,9 +40,10 @@ public class SceneManager : MonoBehaviour
                 m_scenes[(int)m_current_prev].SetActive(false);
             }
             m_current = (int)m_current % m_scenes.Length;
+            m_time = m_timeoffsets[(int)m_current];
             m_scenes[(int)m_current].SetActive(true);
             m_current_prev = m_current;
-            m_time = 0.0f;
+            //m_time = 0.0f;
         }
 
         m_time += Time.deltaTime;
