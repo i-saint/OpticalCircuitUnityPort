@@ -7,6 +7,8 @@ using UnityEditor;
 public class SceneManager : MonoBehaviour
 {
     public GameObject[] m_scenes;
+    public AudioSource m_audio_source;
+    Animator m_animator;
     public float[] m_timeoffsets;
     public float m_current;
     public float m_time;
@@ -20,15 +22,20 @@ public class SceneManager : MonoBehaviour
 
     void GoNextScene()
     {
-        GetComponent<Animator>().enabled = false;
+        m_animator.enabled = false;
         m_current += 1.0f;
     }
 
     void Start()
     {
+        m_animator = GetComponent<Animator>();
         foreach(var s in m_scenes) {
             s.SetActive(false);
         }
+        Shader.WarmupAllShaders();
+        m_animator.enabled = true;
+        m_animator.Play(0);
+        m_audio_source.Play();
     }
     
     void Update()
@@ -50,6 +57,17 @@ public class SceneManager : MonoBehaviour
         Shader.SetGlobalFloat("A", m_time);
     }
 
+    public void Quit()
+    {
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+
+#if UNITY_EDITOR
     void OnGUI()
     {
         if (GUI.Button(new Rect(5, 5, 150, 25), "next scene"))
@@ -57,4 +75,5 @@ public class SceneManager : MonoBehaviour
             GoNextScene();
         }
     }
+#endif
 }

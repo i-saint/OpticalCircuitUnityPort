@@ -17,7 +17,7 @@ float3 G(float3 a,float b)
         float d=clamp(dot(a,a),.05,.65);
         c*=d;
         a=abs(a)/d-1.31;
-        a.xy=mul(a.xy,float2x2(1,1,-1,1)*.70710678118);
+        a.xy=mul(a.xy,transpose(float2x2(1,1,-1,1))*.70710678118);
     }
     return a*c;
 }
@@ -153,7 +153,7 @@ float T(float3 a)
     float3 c=floor(b)+.5;
     float4 d=float4(normalize(sin(c*float3(1,2,3)))*sin(A*.5),cos(A*.5));
     float e=d.x,f=d.y,g=d.z,h=d.w;
-    b=abs(mul(float3x3(.5-f*f-g*g,e*f-h*g,e*g+h*f,e*f+h*g,.5-e*e-g*g,f*g-h*e,e*g-h*f,f*g+h*e,.5-e*e-f*f)*2, (b-c)));
+    b=abs(mul( transpose(float3x3(.5-f*f-g*g,e*f-h*g,e*g+h*f,e*f+h*g,.5-e*e-g*g,f*g-h*e,e*g-h*f,f*g+h*e,.5-e*e-f*f))*2, (b-c)));
     b.xy+=frac(c.zz*c.yz*float2(.11,.31))*.095;
     return min(max(max(b.x,b.y),b.z)-.1,.3)*.2
 #endif
@@ -245,7 +245,7 @@ vs_out vert(ia_out I)
     float3 e=normalize(float3(sin(float2(.53,.47)*d)*4+sin(float2(.91,1.1)*d)*2+sin(float2(2.3,1.7)*d),200)),
     f=normalize(cross(e,float3(sin(d),50,0)));
     O.B = a;
-    O.C = mul(float3x3(c,cross(c,b),b), (f*I.vertex.x*1.78+cross(f,e)*I.vertex.y+e*1.4));
+    O.C = mul(transpose(float3x3(c,cross(c,b),b)), (f*I.vertex.x*1.78+cross(f,e)*I.vertex.y+e*1.4));
     return O;
 }
 
